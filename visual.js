@@ -18,20 +18,34 @@ function addEventHandler(elem, eventType, handler) {
   else if (elem.attachEvent) elem.attachEvent("on" + eventType, handler);
 }
 
-addEventHandler($("#inputfile"), "change", function () {
-  $("#inputfile").setAttribute("hidden", true);
-  var r = new FileReader();
-  r.readAsText(this.files[0], config.encoding);
-  r.onload = function () {
-    //读取完成后，数据保存在对象的result属性中
-    var data = d3.csvParse(this.result);
+!(function () {
+  var data = null;
+
+  addEventHandler($("#inputfile"), "change", function () {
+    var r = new FileReader();
+    r.readAsText(this.files[0], config.encoding);
+    r.onload = function () {
+      //读取完成后，数据保存在对象的result属性中
+      try {
+        data = d3.csvParse(this.result);
+      } catch (error) {
+        alert(error);
+      }
+    };
+  });
+
+  addEventHandler($("#play"), "click", function () {
+    if (data === null) {
+      return alert("请先选择文件");
+    }
+    $(".control").setAttribute("hidden", true);
     try {
       draw(data);
     } catch (error) {
       alert(error);
     }
-  };
-});
+  });
+})();
 
 function draw(data) {
   var date = [];
