@@ -9,16 +9,34 @@
 // import * as d3 from 'd3';
 // require("./stylesheet.css");
 
-const $ = function (selector) {
-  return document.querySelector(selector);
-};
-
-function addEventHandler(elem, eventType, handler) {
-  if (elem.addEventListener) elem.addEventListener(eventType, handler, false);
-  else if (elem.attachEvent) elem.attachEvent("on" + eventType, handler);
-}
-
 !(function () {
+  const $ = function (selector) {
+    return document.querySelector(selector);
+  };
+
+  function addEventHandler(elem, eventType, handler) {
+    if (elem.addEventListener) elem.addEventListener(eventType, handler, false);
+    else if (elem.attachEvent) elem.attachEvent("on" + eventType, handler);
+  }
+
+  function loadConfig() {
+    const configJson = JSON.stringify(config, null, 2);
+    $(".editor").value = configJson;
+  }
+  loadConfig();
+
+  function getNewConfig() {
+    // 读取设置，和当前默认设置合并
+    const editorValue = $(".editor").value;
+    var result = null;
+    try {
+      result = JSON.parse(editorValue);
+    } catch (error) {
+      alert(error);
+    }
+    return result;
+  }
+
   var data = null;
 
   addEventHandler($("#inputfile"), "change", function () {
@@ -38,6 +56,14 @@ function addEventHandler(elem, eventType, handler) {
     if (data === null) {
       return alert("请先选择文件");
     }
+    const newConfig = getNewConfig();
+    if (newConfig === null) {
+      return;
+    }
+    // merge config
+    Object.keys(newConfig).forEach(function (key) {
+      config[key] = newConfig[key];
+    });
     $(".control").setAttribute("hidden", true);
     try {
       draw(data);

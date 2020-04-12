@@ -98,7 +98,7 @@
   // 如果看不懂这是在干什么的话，建议不要修改这里。
   // 反格式化函数:
   // 格式化操作可能会导致NaN问题。此函数将格式化后的数值反格式化为JS可以识别的数字。
-  deformat: function(val, postfix) {
+  deformat: function (val, postfix) {
     return Number(val.replace(postfix, "").replace(/\,/g, ""));
   },
   //////////////////////////////////////////////////////////////////////////////

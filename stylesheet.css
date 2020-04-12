@@ -8,10 +8,9 @@ body {
     margin: 0px;
 }
 
-.control {
-    position: absolute;
-    top: 50%;
-    left: 45%;
+.control .editor {
+    min-width: 500px;
+    min-height: 500px;
 }
 
 .domain {
