@@ -20,7 +20,13 @@
   }
 
   function loadConfig() {
-    const configJson = JSON.stringify(config, null, 2);
+    var configJson = localStorage.getItem("config");
+    if (configJson === null) {
+      configJson = JSON.stringify(config, null, 2);
+    } else {
+      configJson = JSON.stringify(JSON.parse(configJson), null, 2);
+    }
+
     $(".editor").value = configJson;
   }
   loadConfig();
@@ -60,11 +66,14 @@
     if (newConfig === null) {
       return;
     }
+    localStorage.setItem("config", JSON.stringify(newConfig));
     // merge config
     Object.keys(newConfig).forEach(function (key) {
       config[key] = newConfig[key];
     });
+
     $(".control").setAttribute("hidden", true);
+
     try {
       draw(data);
     } catch (error) {
